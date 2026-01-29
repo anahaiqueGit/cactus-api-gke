@@ -1,0 +1,17 @@
+key.json
+*.pem
+*.key
+credentials.json
+.env
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.idea/
+.vscode/
+.DS_Store
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+k8s/secret.yaml

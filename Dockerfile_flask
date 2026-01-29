@@ -1,0 +1,28 @@
+# Etapa 1: Builder
+FROM python:3.11-slim as builder
+
+WORKDIR /app
+
+# Instalar dependencias en un directorio temporal
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# Etapa 2: Runtime
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copiar solo las dependencias instaladas desde la etapa builder
+COPY --from=builder /root/.local /root/.local
+COPY app.py .
+
+# Asegurar que los binarios estén en el PATH
+ENV PATH=/root/.local/bin:$PATH
+
+# Usuario no-root para mayor seguridad
+RUN useradd -m appuser && chown -R appuser /app
+USER appuser
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
