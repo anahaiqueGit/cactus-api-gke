@@ -96,7 +96,7 @@ async def predict(file: UploadFile = File(...)):
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="El archivo debe ser una imagen.")
 
-     try:
+    try:
         contents = await file.read()
         img = Image.open(io.BytesIO(contents)).convert("RGB")
         img = img.resize((32, 32))
@@ -107,7 +107,7 @@ async def predict(file: UploadFile = File(...)):
         prediction = model.predict(img_array, verbose=0)[0][0]
         has_cactus = 1 if prediction > 0.5 else 0
         confidence = float(prediction) if has_cactus else float(1 - prediction)
-        
+
         saved_to_db = False
         conn = get_db_connection()
         if conn:
@@ -175,4 +175,3 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-    
